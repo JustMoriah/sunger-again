@@ -5,7 +5,7 @@ import axios from "axios";
 const Login = () => {
     const [user, setUser] = useState({
         correo: "",
-        contraseña: ""
+        contrasena: ""
     });
 
     const handleChange = (e) => {
@@ -18,7 +18,7 @@ const Login = () => {
             .then((response) => {
                 const storedUser = response.data;
                 if (storedUser) {
-                    if (storedUser.contraseña === user.contraseña) {
+                    if (storedUser.contrasena === user.contrasena) {
                         sessionStorage.setItem("id", `${storedUser.id_usuario}`);
                         if (storedUser.id_rol === 1) {
                             window.location.href = "/owner";
@@ -49,7 +49,7 @@ const Login = () => {
                 <h1>Iniciar Sesion</h1>
                 <form onSubmit={handleSubmit}>
                     <input type="email" name="correo" placeholder="Correo Electronico" onChange={handleChange} required/><br/><br/>
-                    <input type="password" name="contraseña" placeholder="Contraseña" onChange={handleChange} required/><br/><br/>
+                    <input type="password" name="contrasena" placeholder="Contraseña" onChange={handleChange} required/><br/><br/>
                     <button type="submit">Iniciar Sesion</button>
                 </form><br/>
             </div>

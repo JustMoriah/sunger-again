@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 const NavBar = () => {
     const id_usuario = sessionStorage.getItem("id");
-    const [userRole, setUserRole] = useState(null); // Store user role here
+    const [userRole, setUserRole] = useState(null);
 
     useEffect(() => {
         axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)

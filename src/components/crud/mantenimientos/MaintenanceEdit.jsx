@@ -1,0 +1,73 @@
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
+const MaintenanceEdit = () => {
+    const { id } = useParams();
+    const [maintenance, setMaintenance] = useState({
+        id_cargador: "" ,
+        id_usuario: "", 
+        fecha: "",
+        tipo: "",
+        descripcion: ""
+    });
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/api/maintenance/id/${id}`)
+        .then(response => {
+            const formattedDate = new Date(response.data.fecha).toISOString().split('T')[0];
+            setMaintenance({ ...response.data, fecha: formattedDate });
+        })
+            .catch(error => console.error(error));
+    }, [id]);
+
+    const handleChange = (e) => {
+        setMaintenance({ ...maintenance, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        axios.put(`http://localhost:3001/api/maintenance/id/${id}`, maintenance)
+            .then(() => {alert("Mantenencia actualizado")
+                window.location.href = "/owner";
+            })
+            .catch(error => console.error(error));
+    };
+
+    const id_usuario = sessionStorage.getItem("id");
+    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+        .then((response) => {
+            const storedUser = response.data;
+            if (storedUser) {
+            if (storedUser.id_rol != 1) {
+                window.location.href = "/home";
+            }
+            }
+        })
+        .catch((error) => {
+        if (error.response && error.response.status === 404) {
+            window.location.href = "/login";
+        } else {
+            console.error("An error occurred while checking for the email:", error);
+        }
+    });
+    return (
+        <div>
+            <h1>Actualizar Mantenimiento</h1>
+            <form onSubmit={handleSubmit}>
+            <input type="number" name="id_cargador" placeholder="ID de cargador" value={maintenance.id_cargador} onChange={handleChange} required/><br/><br/>
+                <input type="number" name="id_usuario" placeholder="ID del usuario" value={maintenance.id_usuario} onChange={handleChange}/><br/><br/>
+                <input type="date" name="fecha" value={maintenance.fecha} onChange={handleChange}/><br/><br/>
+                <select name="tipo" value={maintenance.tipo} onChange={handleChange} required>
+                    <option value="Rutino">Rutino</option>
+                    <option value="Reparativo">Reparativo</option>
+                </select><br/><br/>
+                <textarea name="descripcion" placeholder="Descripcion" value={maintenance.descripcion} onChange={handleChange} rows="5" cols="50" required/><br/><br/>
+            <button type="submit">Actualizar mantenimiento</button>
+            </form><br />
+            <a href="/owner"><button>Cancelar</button></a>
+        </div>
+    );
+};
+
+export default MaintenanceEdit;

@@ -8,7 +8,7 @@ const SignUp = () => {
         apellido: "",
         fn: "",
         correo: "",
-        contraseña: 3
+        contrasena: 3
     });
 
     const handleChange = (e) => {
@@ -44,7 +44,7 @@ const SignUp = () => {
                 <h1>Registrarse</h1>
                 <form onSubmit={handleSubmit}>
                     <input type="email" name="correo" placeholder="Correo Electronico" onChange={handleChange} required/><br/><br/>
-                    <input type="password" name="contraseña" placeholder="Contraseña" onChange={handleChange} required/><br/><br/>
+                    <input type="password" name="contrasena" placeholder="Contraseña" onChange={handleChange} required/><br/><br/>
                     <input type="text" name="nombre" placeholder="Nombre(s)" onChange={handleChange} required/><br/><br/>
                     <input type="text" name="apellido" placeholder="Apellido(s)" onChange={handleChange} required/><br/><br/>
                     <input type="date" name="fn" onChange={handleChange} required/><br/><br/>
