@@ -7,8 +7,10 @@ const SignUp = () => {
         nombre: "",
         apellido: "",
         fn: "",
+        genero: "",
         correo: "",
-        contrasena: 3
+        contrasena: "",
+        activo: 1,
     });
 
     const handleChange = (e) => {
@@ -48,6 +50,13 @@ const SignUp = () => {
                     <input type="text" name="nombre" placeholder="Nombre(s)" onChange={handleChange} required/><br/><br/>
                     <input type="text" name="apellido" placeholder="Apellido(s)" onChange={handleChange} required/><br/><br/>
                     <input type="date" name="fn" onChange={handleChange} required/><br/><br/>
+                    <select name="genero" onChange={handleChange} required>
+                        <option value="">--Selecciona tu genero--</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="No Binario">No Binario</option>
+                        <option value="-">Prefiero no decir</option>
+                    </select><br/><br/>
                     <button type="submit">Registrarse</button>
                 </form><br/>
             </div>

@@ -3,11 +3,9 @@ import axios from "axios";
 
 const LoginForm = () => {
     const [login, setLogin] = useState({
-        nombre: "",
-        ap_pat: "",
-        ap_mat: "",
-        correo: "",
-        contrasena: ""
+        id_usuario: "",
+        accion: "",
+        hora: "",
     });
 
     const handleChange = (e) => {

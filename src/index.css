@@ -126,6 +126,26 @@ input:focus, select:focus {
   color: #3a4ab3;
 }
 
+/* Ensure the dropdown items are stacked vertically */
+.navbar .navLinks .dropdown {
+  display: flex;
+  flex-direction: column; /* Stack the main items vertically */
+}
+
+.navbar .navLinks .dropdown-menu {
+  position: absolute;  /* Ensure the dropdowns are not stacked below */
+  left: 100%;  /* Position the submenu to the right of the main item */
+  top: 0;  /* Align it with the parent */
+  margin-left: 10px; /* Optional: add some space between main item and submenu */
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);  /* Add shadow to submenu for better visibility */
+}
+
+/* Make sure submenus themselves are positioned correctly */
+.navbar .navLinks .dropdown-submenu {
+  position: relative; /* Ensure the submenu is relative to its parent */
+}
+
 .barLogo {
   font-size: 1.2em;
   font-weight: 600;
@@ -295,4 +315,33 @@ iframe {
   .action-buttons button:hover {
     background-color: #2d3748;
   }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  .pagination li {
+    margin: 0 5px;
+  }
+  
+  .pagination li a {
+    text-decoration: none;
+    padding: 8px 12px;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  .pagination .active a {
+    background-color: #ff7f32;
+    color: white;
+  }
+  
+  .pagination li a:hover {
+    background-color: #ddd;
+  }  
 }

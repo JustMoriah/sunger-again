@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
@@ -12,6 +12,9 @@ const Login = () => {
         setUser({ ...user, [e.target.name]: e.target.value });
     };
 
+    const currentDate = new Date();
+    const navigate = useNavigate();
+
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.get(`http://localhost:3001/api/users/correo/${user.correo}`)
@@ -20,12 +23,40 @@ const Login = () => {
                 if (storedUser) {
                     if (storedUser.contrasena === user.contrasena) {
                         sessionStorage.setItem("id", `${storedUser.id_usuario}`);
+    
+                        // Validate id_usuario
+                        if (!storedUser.id_usuario || isNaN(storedUser.id_usuario)) {
+                            console.error('Invalid id_usuario:', storedUser.id_usuario);
+                            return;
+                        }
+    
+                        const currentDate = new Date();
+    
+                        // Format the current date to MySQL DATETIME format: YYYY-MM-DD HH:MM:SS
+                        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+    
+                        // Construct the login object
+                        const loginData = {
+                            id_usuario: storedUser.id_usuario,
+                            accion: "Login",
+                            hora: formattedDate, // Send the properly formatted date
+                        };
+    
+                        console.log('Sending login data:', loginData);
+    
+                        // Send the POST request
+                        axios.post("http://localhost:3001/api/logins/", loginData)
+                            .then(() => console.log("Login registrado correctamente"))
+                            .catch(error => {
+                                console.error("Error al registrar login:", error);
+                            });
+    
                         if (storedUser.id_rol === 1) {
-                            window.location.href = "/owner";
+                            navigate("/owner");
                         } else if (storedUser.id_rol === 2) {
-                            window.location.href = "/admin";
+                            navigate("/admin");
                         } else if (storedUser.id_rol === 3) {
-                            window.location.href = "/home";
+                            navigate("/home");
                         }
                     } else {
                         alert("Contraseña incorrecta.");
@@ -35,17 +66,16 @@ const Login = () => {
             .catch((error) => {
                 if (error.response && error.response.status === 404) {
                     alert("Usuario no encontrado, por favor registrate.");
-                    window.location.href = "/signup";
+                    navigate("/signup");
                 } else {
                     console.error("An error occurred while checking for the email:", error);
                 }
             });
-    };
-    
+    };    
 
     return (
         <div>
-            <div class="login">
+            <div className="login">
                 <h1>Iniciar Sesion</h1>
                 <form onSubmit={handleSubmit}>
                     <input type="email" name="correo" placeholder="Correo Electronico" onChange={handleChange} required/><br/><br/>

@@ -2,11 +2,15 @@ import React from 'react';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
 
 export default function ChargerList() {
   const [chargers, setChargers] = useState([]);
   const id_usuario = sessionStorage.getItem("id");
   const [userRole, setUserRole] = useState(null);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  const [newPerPage, setNewPerPage] = useState(perPage);
 
   useEffect(() => {
     axios.get("http://localhost:3001/api/chargers/")
@@ -37,8 +41,26 @@ export default function ChargerList() {
                 console.error("An error occurred while fetching user data:", error);
             }
         });
+        const currentPageChargers = chargers.slice(pageNumber * perPage, (pageNumber + 1) * perPage);
+
+        const handlePageClick = ({ selected }) => {
+          setPageNumber(selected);
+        };
+      
+        const handlePerPageChange = (e) => {
+          setNewPerPage(Number(e.target.value)); // Update newPerPage state with the input value
+        };
+      
+        const handleApplyPerPage = () => {
+          setPerPage(newPerPage); // Apply the new perPage value
+        };
   return (
     <div>
+      <form>
+        <label>Cargadores por página:&nbsp;</label>
+        <input type="number" value={newPerPage} onChange={handlePerPageChange} />
+        <button type="button" onClick={handleApplyPerPage}>Aplicar</button> {/* Apply button */}
+      </form>
       <table>
         <tbody>
           <tr>
@@ -46,12 +68,12 @@ export default function ChargerList() {
             <th>Ubicacion</th>
             <th>Estado</th>
             {userRole === 1 ? (
-                <th>Acciones&nbsp;&nbsp;&nbsp;&nbsp;<a href='/charger/create'><button>Registrar cargador</button></a></th>
+                <th><a href='/charger/create'><button>Registrar cargador</button></a></th>
             ) : (
             <p></p>
             )}
           </tr>
-          {chargers.map(charger => (
+          {currentPageChargers.map(charger => (
             <tr key={charger.id_cargador}>
               <td>{charger.id_cargador}</td>
               <td>{charger.ubicacion}</td>
@@ -66,6 +88,14 @@ export default function ChargerList() {
           ))}
         </tbody>
       </table>
+      <ReactPaginate
+        previousLabel={"<"}
+        nextLabel={">"}
+        pageCount={Math.ceil(chargers.length / perPage)}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination"}
+        activeClassName={"active"}
+      />
     </div>
   )
 }

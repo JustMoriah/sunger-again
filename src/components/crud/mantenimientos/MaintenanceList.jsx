@@ -2,19 +2,22 @@ import React from 'react';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
 
 export default function MaintenanceList() {
   const [maintenance, setMaintenance] = useState([]);
   const id_usuario = sessionStorage.getItem("id");
   const [userRole, setUserRole] = useState(null);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  const [newPerPage, setNewPerPage] = useState(perPage);
 
     useEffect(() => {
         axios.get("http://localhost:3001/api/maintenance/")
         .then(response => {
-            // Format the birth date for each user to YYYY-MM-DD
             const formattedMaintenance = response.data.map(maintenance => {
-            const formattedDate = new Date(maintenance.fecha).toISOString().split('T')[0]; // Format the date
-            return { ...maintenance, fecha: formattedDate }; // Update user with formatted date
+            const formattedDate = new Date(maintenance.fecha).toISOString().split('T')[0];
+            return { ...maintenance, fecha: formattedDate };
             });
             setMaintenance(formattedMaintenance);
         })
@@ -44,8 +47,27 @@ export default function MaintenanceList() {
                 console.error("An error occurred while fetching user data:", error);
             }
         });
+
+        const currentPageMain = maintenance.slice(pageNumber * perPage, (pageNumber + 1) * perPage);
+
+        const handlePageClick = ({ selected }) => {
+          setPageNumber(selected);
+        };
+      
+        const handlePerPageChange = (e) => {
+          setNewPerPage(Number(e.target.value)); // Update newPerPage state with the input value
+        };
+      
+        const handleApplyPerPage = () => {
+          setPerPage(newPerPage); // Apply the new perPage value
+        };
   return (
     <div>
+      <form>
+        <label>Mantenimientos por página:&nbsp;</label>
+        <input type="number" value={newPerPage} onChange={handlePerPageChange} />
+        <button type="button" onClick={handleApplyPerPage}>Aplicar</button> {/* Apply button */}
+      </form>
       <table>
         <tbody>
           <tr>
@@ -56,12 +78,12 @@ export default function MaintenanceList() {
             <th>Tipo</th>
             <th>Descripcion</th>
             {userRole === 1 ? (
-                <th>Acciones&nbsp;&nbsp;&nbsp;&nbsp;<a href='/maintenance/create'><button>Registrar mantenimiento</button></a></th>
+                <th><a href='/maintenance/create'><button>Registrar mantenimiento</button></a></th>
             ) : (
             <p></p>
             )}
           </tr>
-          {maintenance.map(maintenance => (
+          {currentPageMain.map(maintenance => (
             <tr key={maintenance.id_historial}>
               <td>{maintenance.id_historial}</td>
               <td>{maintenance.id_cargador}</td>
@@ -79,6 +101,14 @@ export default function MaintenanceList() {
           ))}
         </tbody>
       </table>
+      <ReactPaginate
+        previousLabel={"<"}
+        nextLabel={">"}
+        pageCount={Math.ceil(maintenance.length / perPage)}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination"}
+        activeClassName={"active"}
+      />
     </div>
   )
 }

@@ -7,8 +7,10 @@ const UsuarioForm = () => {
         nombre: "",
         apellido: "",
         fn: "",
+        genero: "",
         correo: "",
-        contrasena: ""
+        contrasena: "",
+        activo: ""
     });
 
     const handleChange = (e) => {
@@ -55,8 +57,19 @@ const UsuarioForm = () => {
                 <input type="text" name="nombre" placeholder="Nombre" onChange={handleChange} required/><br/><br/>
                 <input type="text" name="apellido" placeholder="Apellido" onChange={handleChange} required/><br/><br/>
                 <input type="date" name="fn" onChange={handleChange} required/><br/><br/>
+                <select name="genero" value={user.genero} onChange={handleChange} required>
+                    <option value="">--Selecciona un genero--</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="No Binario">No Binario</option>
+                    <option value="-">Prefiero no decir</option>
+                </select><br/><br/>
                 <input type="email" name="correo" placeholder="Correo Electronico" onChange={handleChange} required/><br/><br/>
                 <input type="password" name="contrasena" placeholder="Contraseña" onChange={handleChange} required/><br/><br/>
+                <select name="activo" onChange={handleChange} required>
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select><br/><br/>
                 <button type="submit">Agregar Usuario</button>
             </form><br/><br/>
             <a href="/owner"><button>Cancelar</button></a>

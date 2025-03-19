@@ -32,7 +32,7 @@ const UploadExcel = () => {
 
   return (
     <div>
-      <h2>Subir archivo Excel</h2>
+      <h3>Subir archivo Excel</h3>
       <form onSubmit={handleUpload}>
         <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileChange} />
         <button type="submit">Subir</button>

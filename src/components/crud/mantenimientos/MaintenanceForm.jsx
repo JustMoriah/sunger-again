@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const MaintenanceForm = () => {
+    const [users, setUsers] = useState([]);
+    const [chargers, setChargers] = useState([]);
+
     const [maintenance, setMaintenance] = useState({
         id_cargador: "" ,
         id_usuario: "", 
@@ -9,6 +12,15 @@ const MaintenanceForm = () => {
         tipo: "Rutino",
         descripcion: ""
     });
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/api/users/")
+            .then(response => setUsers(response.data))
+            .catch(error => console.error(error));
+        axios.get("http://localhost:3001/api/chargers/")
+            .then(response => setChargers(response.data))
+            .catch(error => console.error(error));
+      }, []);
 
     const handleChange = (e) => {
         setMaintenance({ ...maintenance, [e.target.name]: e.target.value });
@@ -45,8 +57,30 @@ const MaintenanceForm = () => {
         <div>
             <h1>Registro de Mantenimiento</h1>
             <form onSubmit={handleSubmit}>
-                <input type="number" name="id_cargador" placeholder="ID de cargador" onChange={handleChange} required/><br/><br/>
-                <input type="number" name="id_usuario" placeholder="ID del usuario" onChange={handleChange}/><br/><br/>
+                <select name="id_cargador" value={maintenance.id_cargador} onChange={handleChange} required>
+                    <option value="">-- Selecciona Cargador --</option>
+                        {chargers.length > 0 ? (
+                            chargers.map((charger) => (
+                                <option key={charger.id_cargador} value={charger.id_cargador}>
+                                    {charger.id_cargador} - {charger.ubicacion}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="">Cargadores no encontrados</option>
+                        )}
+                </select><br/><br/>
+                <select name="id_usuario" value={maintenance.id_usuario} onChange={handleChange} required>
+                    <option value="">-- Selecciona Usuario --</option>
+                        {users.length > 0 ? (
+                            users.map((user) => (
+                                <option key={user.id_usuario} value={user.id_usuario}>
+                                    {user.id_usuario} - {user.correo}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="">Usuarios no encontrados</option>
+                        )}
+                </select><br/><br/>
                 <input type="date" name="fecha" onChange={handleChange}/><br/><br/>
                 <select name="tipo" onChange={handleChange} required>
                     <option value="Rutino">Rutino</option>

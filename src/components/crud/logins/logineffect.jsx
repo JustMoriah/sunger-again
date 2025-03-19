@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ReactPaginate from 'react-paginate';
 
 const LoginList = () => {
   const [logins, setLogins] = useState([]);
   const id_usuario = sessionStorage.getItem("id");
   const [userRole, setUserRole] = useState(null);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  const [newPerPage, setNewPerPage] = useState(perPage);
 
   useEffect(() => {
     axios.get("http://localhost:3001/api/logins/")
       .then(response => {
-        console.log("Primer login:", response.data[0]);
         setLogins(response.data);
       })
       .catch(error => {
@@ -19,11 +22,11 @@ const LoginList = () => {
       });
   }, []);
 
-  const handleDelete = (id_registro) => {
+  const handleDelete = (id_log) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este registro?")) {
-      axios.delete(`http://localhost:3001/api/logins/id/${id_registro}`)
+      axios.delete(`http://localhost:3001/api/logins/id/${id_log}`)
         .then(() => {
-          setLogins(logins.filter(login => login.id_registro !== id_registro));
+          setLogins(logins.filter(login => login.id_log !== id_log));
         })
         .catch(error => {
           console.error("Error al eliminar el login:", error);
@@ -47,47 +50,55 @@ const LoginList = () => {
             }
   });
 
+  const currentPageLogins = logins.slice(pageNumber * perPage, (pageNumber + 1) * perPage);
+
+  const handlePageClick = ({ selected }) => {
+    setPageNumber(selected);
+  };
+
+  const handlePerPageChange = (e) => {
+    setNewPerPage(Number(e.target.value));
+  };
+
+  const handleApplyPerPage = () => {
+    setPerPage(newPerPage);
+  };
+
   return (
     <div>
+      <form>
+        <label>Logins por página:&nbsp;</label>
+        <input type="number" value={newPerPage} onChange={handlePerPageChange} />
+        <button type="button" onClick={handleApplyPerPage}>Aplicar</button> {/* Apply button */}
+      </form>
       <table>
         <thead>
           <tr>
-            <th>ID Registro</th>
-            <th>Nombre</th>
-            <th>Apellido Paterno</th>
-            <th>Apellido Materno</th>
-            <th>Correo</th>
-            <th>Contraseña</th>
-            {userRole === 1 ? (
-              <th>Acciones&nbsp;&nbsp;&nbsp;&nbsp;<a href='/logins/create'><button>Registrar login</button></a></th>
-            ) : (
-              <p></p>
-            )}
+            <th>ID</th>
+            <th>ID Usuario</th>
+            <th>Accion</th>
+            <th>Fecha y Hora</th>
           </tr>
         </thead>
         <tbody>
-          {logins.map((login) => (
-            <tr key={login.id_registro}>
-              <td>{login.id_registro}</td>
-              <td>{login.nombre}</td>
-              <td>{login.ap_pat}</td>
-              <td>{login.ap_mat}</td>
-              <td>{login.correo}</td>
-              <td>{login.contrasena}</td>
-              {userRole === 1 ? (
-                <td className="action-buttons">
-                  <Link to={`/logins/edit/${login.id_registro}`}>
-                    <button>Editar</button>
-                  </Link>
-                  <button onClick={() => handleDelete(login.id_registro)}>Eliminar</button>
-                </td>
-              ) : (
-                <p></p>
-              )}
+          {currentPageLogins.map((login) => (
+            <tr key={login.id_log}>
+              <td>{login.id_log}</td>
+              <td>{login.id_usuario}</td>
+              <td>{login.accion}</td>
+              <td>{login.hora}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      <ReactPaginate
+        previousLabel={"<"}
+        nextLabel={">"}
+        pageCount={Math.ceil(logins.length / perPage)}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination"}
+        activeClassName={"active"}
+      />
     </div>
   );
 };

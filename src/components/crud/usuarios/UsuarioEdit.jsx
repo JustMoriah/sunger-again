@@ -9,8 +9,10 @@ const UsuarioEdit = () => {
         nombre: "",
         apellido: "",
         fn: "",
+        genero: "",
         correo: "",
-        contrasena: ""
+        contrasena: "",
+        activo: ""
     });
 
     useEffect(() => {
@@ -65,15 +67,20 @@ const UsuarioEdit = () => {
                 </select><br /><br />
                 <input type="text" name="nombre" placeholder="Nombre" value={user.nombre} onChange={handleChange} required /><br /><br />
                 <input type="text" name="apellido" placeholder="Apellido Paterno" value={user.apellido} onChange={handleChange} required /><br /><br />
-                <input 
-                    type="date" 
-                    name="fn" 
-                    value={user.fn} 
-                    onChange={handleChange} 
-                    required 
-                /><br /><br />
+                <input type="date" name="fn" value={user.fn} onChange={handleChange} required /><br /><br />
+                <select name="genero" value={user.genero} onChange={handleChange}>
+                <option value="">--Selecciona un genero--</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="No Binario">No Binario</option>
+                    <option value="-">Prefiero no decir</option>
+                </select><br/><br/>
                 <input type="email" name="correo" placeholder="Correo Electronico" value={user.correo} onChange={handleChange} required /><br /><br />
                 <input type="password" name="contrasena" placeholder="Contraseña" value={user.contrasena} onChange={handleChange} required /><br /><br />
+                <select name="activo" value={user.activo} onChange={handleChange} required>
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select><br/><br/>
                 <button type="submit">Actualizar Usuario</button>
             </form><br />
             <a href="/owner"><button>Cancelar</button></a>

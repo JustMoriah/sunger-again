@@ -18,6 +18,11 @@ import LoginForm from "./components/crud/logins/loginform";
 import LoginEdit from "./components/crud/logins/loginedit";
 import MaintenanceForm from "./components/crud/mantenimientos/MaintenanceForm";
 import MaintenanceEdit from "./components/crud/mantenimientos/MaintenanceEdit";
+import UserManage from "./components/owner_pages/Users";
+import RoleManage from "./components/owner_pages/Roles";
+import LoginHistory from "./components/owner_pages/Logins";
+import ChargerManage from "./components/owner_pages/Chargers";
+import MaintenanceManage from "./components/owner_pages/Maintenance";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -38,6 +43,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/logins/edit/:id" element={<LoginEdit/>}/>
       <Route path="/maintenance/create" element={<MaintenanceForm/>}/>
       <Route path="/maintenance/edit/:id" element={<MaintenanceEdit/>}/>
+      <Route path="/user-manage" element={<UserManage/>}/>
+      <Route path="/role-manage" element={<RoleManage/>}/>
+      <Route path="/maintenance" element={<MaintenanceManage/>}/>
+      <Route path="/login-history" element={<LoginHistory/>}/>
+      <Route path="/charger-manage" element={<ChargerManage/>}/>
     </Routes>
   </BrowserRouter>
 );
