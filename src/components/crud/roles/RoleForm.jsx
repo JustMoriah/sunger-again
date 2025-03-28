@@ -13,15 +13,15 @@ const RoleForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("http://localhost:3001/api/roles/", role)
+        axios.post("http://localhost:4000/api/roles/", role)
             .then(() => {alert("Rol registrado")
-                window.location.href = "/owner";
+                window.location.href = "/role-manage";
             })
             .catch(error => console.error(error));
     };
 
     const id_usuario = sessionStorage.getItem("id");
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
     .then((response) => {
         const storedUser = response.data;
         if (storedUser) {
@@ -46,7 +46,7 @@ const RoleForm = () => {
                 <input type="text" name="permisos" placeholder="Permisos" onChange={handleChange}/><br/><br/>
                 <button type="submit">Agregar Rol</button>
             </form><br/><br/>
-            <a href="/owner"><button>Cancelar</button></a>
+            <a href="/role-manage"><button>Cancelar</button></a>
         </div>
     );
 };

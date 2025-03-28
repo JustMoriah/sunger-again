@@ -12,7 +12,7 @@ const LoginList = () => {
   const [newPerPage, setNewPerPage] = useState(perPage);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/logins/")
+    axios.get("http://localhost:4000/api/logins/")
       .then(response => {
         setLogins(response.data);
       })
@@ -24,7 +24,7 @@ const LoginList = () => {
 
   const handleDelete = (id_log) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este registro?")) {
-      axios.delete(`http://localhost:3001/api/logins/id/${id_log}`)
+      axios.delete(`http://localhost:4000/api/logins/id/${id_log}`)
         .then(() => {
           setLogins(logins.filter(login => login.id_log !== id_log));
         })
@@ -35,7 +35,7 @@ const LoginList = () => {
     }
   };
 
-  axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+  axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {
@@ -71,26 +71,28 @@ const LoginList = () => {
         <input type="number" value={newPerPage} onChange={handlePerPageChange} />
         <button type="button" onClick={handleApplyPerPage}>Aplicar</button> {/* Apply button */}
       </form>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>ID Usuario</th>
-            <th>Accion</th>
-            <th>Fecha y Hora</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentPageLogins.map((login) => (
-            <tr key={login.id_log}>
-              <td>{login.id_log}</td>
-              <td>{login.id_usuario}</td>
-              <td>{login.accion}</td>
-              <td>{login.hora}</td>
+      <div className='table-container'>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ID Usuario</th>
+              <th>Accion</th>
+              <th>Fecha y Hora</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentPageLogins.map((login) => (
+              <tr key={login.id_log}>
+                <td>{login.id_log}</td>
+                <td>{login.id_usuario}</td>
+                <td>{login.accion}</td>
+                <td>{login.hora}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <ReactPaginate
         previousLabel={"<"}
         nextLabel={">"}

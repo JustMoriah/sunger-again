@@ -13,7 +13,7 @@ const UserRoles = () => {
 
   useEffect(() => {
     // Fetch all users
-    axios.get('http://localhost:3001/api/users/')
+    axios.get('http://localhost:4000/api/users/')
       .then(response => {
         console.log('Fetched users:', response.data); // Debugging log
         setUsers(response.data);

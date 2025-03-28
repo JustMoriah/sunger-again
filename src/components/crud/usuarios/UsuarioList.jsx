@@ -15,7 +15,7 @@ export default function UsuarioList() {
 
   useEffect(() => {
     // Fetch all users
-    axios.get('http://localhost:3001/api/users/')
+    axios.get('http://localhost:4000/api/users/')
       .then(response => {
         const formattedUsers = response.data.map(user => {
           const formattedDate = new Date(user.fn).toISOString().split('T')[0];
@@ -26,7 +26,7 @@ export default function UsuarioList() {
       .catch(error => console.error(error));
 
     // Fetch logged-in user data
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
       .then(response => {
         const storedUser = response.data;
         if (storedUser) {
@@ -42,7 +42,7 @@ export default function UsuarioList() {
       });
 
       //Fetch all roles
-      axios.get("http://localhost:3001/api/roles/")
+      axios.get("http://localhost:4000/api/roles/")
         .then(response => setRoles(response.data))
         .catch(error => console.error(error));
   }, [id_usuario]);
@@ -62,7 +62,7 @@ export default function UsuarioList() {
 
     setUsers(updatedUsers);
 
-    axios.put(`http://localhost:3001/api/users/id/${id_usuario}`, { id_rol: newRole })
+    axios.put(`http://localhost:4000/api/users/id/${id_usuario}`, { id_rol: newRole })
       .then(response => {
         alert('¡El rol ha sido actualizado exitosamente!');
       })
@@ -72,11 +72,11 @@ export default function UsuarioList() {
   };
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:3001/api/users/id/${id}`)
+    axios.delete(`http://localhost:4000/api/users/id/${id}`)
       .then(() => {
         setUsers(users.filter(user => user.id_usuario !== id));
         alert('¡Registro del usuario ha sido destruido en el sol!');
-        window.location.href = '/owner';
+        window.location.href = '/user-manage';
       })
       .catch(error => console.error(error));
   };
@@ -102,59 +102,61 @@ export default function UsuarioList() {
         <input type="number" value={newPerPage} onChange={handlePerPageChange} />
         <button type="button" onClick={handleApplyPerPage}>Aplicar</button> {/* Apply button */}
       </form>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>E-mail</th>
-            <th>Nombre(s)</th>
-            <th>Apellido(s)</th>
-            <th>Fecha de Nacimiento</th>
-            <th>Genero</th>
-            <th>Rol</th>
-            <th>Activo</th>
-            {userRole === 1 && (
-              <th><Link to='/user/create'><button>Registrar usuario</button></Link></th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {currentPageUsers.map(user => (
-            <tr key={user.id_usuario}>
-              <td>{user.id_usuario}</td>
-              <td>{user.correo}</td>
-              <td>{user.nombre}</td>
-              <td>{user.apellido}</td>
-              <td>{user.fn}</td>
-              <td>{user.genero}</td>
-              <td>
-                <select
-                  name="id_rol"
-                  value={user.id_rol}
-                  onChange={(e) => handleRoleChange(user.id_usuario, e.target.value)}
-                >
-                  {roles.length > 0 ? (
-                            roles.map((role) => (
-                                <option key={role.id_rol} value={role.id_rol}>
-                                    {role.nombre_rol}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="">Roles no encontrados</option>
-                        )}
-                </select>
-              </td>
-              <td>{user.activo}</td>
+      <div className='table-container'>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>E-mail</th>
+              <th>Nombre(s)</th>
+              <th>Apellido(s)</th>
+              <th>Fecha de Nacimiento</th>
+              <th>Genero</th>
+              <th>Rol</th>
+              <th>Activo</th>
               {userRole === 1 && (
-                <td className="action-buttons">
-                  <Link to={`/user/edit/${user.id_usuario}`}><button>Editar</button></Link>
-                  <button onClick={() => handleDelete(user.id_usuario)}>Eliminar</button>
-                </td>
+                <th><Link to='/user/create'><button>Registrar usuario</button></Link></th>
               )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentPageUsers.map(user => (
+              <tr key={user.id_usuario}>
+                <td>{user.id_usuario}</td>
+                <td>{user.correo}</td>
+                <td>{user.nombre}</td>
+                <td>{user.apellido}</td>
+                <td>{user.fn}</td>
+                <td>{user.genero}</td>
+                <td>
+                  <select
+                    name="id_rol"
+                    value={user.id_rol}
+                    onChange={(e) => handleRoleChange(user.id_usuario, e.target.value)}
+                  >
+                    {roles.length > 0 ? (
+                              roles.map((role) => (
+                                  <option key={role.id_rol} value={role.id_rol}>
+                                      {role.nombre_rol}
+                                  </option>
+                              ))
+                          ) : (
+                              <option value="">Roles no encontrados</option>
+                          )}
+                  </select>
+                </td>
+                <td>{user.activo}</td>
+                {userRole === 1 && (
+                  <td className="action-buttons">
+                    <Link to={`/user/edit/${user.id_usuario}`}><button>Editar</button></Link>
+                    <button onClick={() => handleDelete(user.id_usuario)}>Eliminar</button>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <ReactPaginate
         previousLabel={"<"}

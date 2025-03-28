@@ -16,16 +16,16 @@ const MaintenanceEdit = () => {
     });
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/maintenance/id/${id}`)
+        axios.get(`http://localhost:4000/api/maintenance/id/${id}`)
         .then(response => {
             const formattedDate = new Date(response.data.fecha).toISOString().split('T')[0];
             setMaintenance({ ...response.data, fecha: formattedDate });
         })
             .catch(error => console.error(error));
-        axios.get("http://localhost:3001/api/users/")
+        axios.get("http://localhost:4000/api/users/")
             .then(response => setUsers(response.data))
             .catch(error => console.error(error));
-        axios.get("http://localhost:3001/api/chargers/")
+        axios.get("http://localhost:4000/api/chargers/")
             .then(response => setChargers(response.data))
             .catch(error => console.error(error));
     }, [id]);
@@ -36,19 +36,19 @@ const MaintenanceEdit = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:3001/api/maintenance/id/${id}`, maintenance)
+        axios.put(`http://localhost:4000/api/maintenance/id/${id}`, maintenance)
             .then(() => {alert("Mantenencia actualizado")
-                window.location.href = "/owner";
+                window.location.href = "/maintenance";
             })
             .catch(error => console.error(error));
     };
 
     const id_usuario = sessionStorage.getItem("id");
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {
-            if (storedUser.id_rol != 1) {
+            if (storedUser.id_rol != 1 && storedUser.id_rol != 2) {
                 window.location.href = "/home";
             }
             }
@@ -96,7 +96,7 @@ const MaintenanceEdit = () => {
                 <textarea name="descripcion" placeholder="Descripcion" value={maintenance.descripcion} onChange={handleChange} rows="5" cols="50" required/><br/><br/>
             <button type="submit">Actualizar mantenimiento</button>
             </form><br />
-            <a href="/owner"><button>Cancelar</button></a>
+            <a href="/maintenance"><button>Cancelar</button></a>
         </div>
     );
 };

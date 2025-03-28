@@ -9,7 +9,7 @@ import UploadExcel from '../UploadExcel';
 
 export default function UserManage() {
   const id_usuario = sessionStorage.getItem("id");
-  axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+  axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
     .then((response) => {
       const storedUser = response.data;
     })
@@ -26,16 +26,20 @@ export default function UserManage() {
         <NavBar/><br/><br/>
         <h1>Manejo de Usuarios</h1>
         <Tabs>
-            <TabList>
-                <Tab>Tabla</Tab>
-                <Tab>Graficas</Tab>
-            </TabList>
-            <TabPanel>
-                <UsuarioList/>
-            </TabPanel>
-            <TabPanel>
-                <UserGender/>
-            </TabPanel>
+          <TabList>
+            <Tab>Tabla</Tab>
+            <Tab>Graficas</Tab>
+          </TabList>
+          <div className="tab-container">
+            <div className="tab-panel-container">
+              <TabPanel className="TabPanel">
+                <UsuarioList />
+              </TabPanel>
+              <TabPanel className="TabPanel">
+                <UserGender />
+              </TabPanel>
+            </div>
+          </div>
         </Tabs>
         <UploadExcel/>
     </div>

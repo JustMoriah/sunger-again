@@ -17,7 +17,7 @@ const LoginForm = () => {
         e.preventDefault();
         console.log("Datos enviados:", login);
 
-        axios.post("http://localhost:3001/api/logins/", login)
+        axios.post("http://localhost:4000/api/logins/", login)
             .then(() => alert("Login registrado correctamente"))
             .catch(error => {
                 console.error("Error al registrar login:", error);

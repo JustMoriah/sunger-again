@@ -13,21 +13,21 @@ export default function ChargerList() {
   const [newPerPage, setNewPerPage] = useState(perPage);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/chargers/")
+    axios.get("http://localhost:4000/api/chargers/")
         .then(response => setChargers(response.data))
         .catch(error => console.error(error));
   }, []);
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:3001/api/chargers/id/${id}`)
+        axios.delete(`http://localhost:4000/api/chargers/id/${id}`)
             .then(() => {setChargers(chargers.filter(charger => charger.id_cargador !== id))
               alert("Cargador ha sido eliminado.");
-              window.location.href = "/owner";
+              window.location.href = "/charger-manage";
             })
             .catch(error => console.error(error));
     };
 
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {
@@ -61,33 +61,35 @@ export default function ChargerList() {
         <input type="number" value={newPerPage} onChange={handlePerPageChange} />
         <button type="button" onClick={handleApplyPerPage}>Aplicar</button> {/* Apply button */}
       </form>
-      <table>
-        <tbody>
-          <tr>
-            <th>ID</th>
-            <th>Ubicacion</th>
-            <th>Estado</th>
-            {userRole === 1 ? (
-                <th><a href='/charger/create'><button>Registrar cargador</button></a></th>
-            ) : (
-            <p></p>
-            )}
-          </tr>
-          {currentPageChargers.map(charger => (
-            <tr key={charger.id_cargador}>
-              <td>{charger.id_cargador}</td>
-              <td>{charger.ubicacion}</td>
-              <td>{charger.estado}</td>
+      <div className='table-container'>
+        <table>
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <th>Ubicacion</th>
+              <th>Estado</th>
               {userRole === 1 ? (
-                <td className="action-buttons"><Link to={`/charger/edit/${charger.id_cargador}`}><button>Editar</button></Link>
-                <button onClick={() => handleDelete(charger.id_cargador)}>Eliminar</button></td>
-                ) : (
-                    <p></p>
-                )}
+                  <th><a href='/charger/create'><button>Registrar cargador</button></a></th>
+              ) : (
+              <p></p>
+              )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+            {currentPageChargers.map(charger => (
+              <tr key={charger.id_cargador}>
+                <td>{charger.id_cargador}</td>
+                <td>{charger.ubicacion}</td>
+                <td>{charger.estado}</td>
+                {userRole === 1 ? (
+                  <td className="action-buttons"><Link to={`/charger/edit/${charger.id_cargador}`}><button>Editar</button></Link>
+                  <button onClick={() => handleDelete(charger.id_cargador)}>Eliminar</button></td>
+                  ) : (
+                      <p></p>
+                  )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <ReactPaginate
         previousLabel={"<"}
         nextLabel={">"}

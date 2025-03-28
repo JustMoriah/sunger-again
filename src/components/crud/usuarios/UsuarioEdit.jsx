@@ -16,7 +16,7 @@ const UsuarioEdit = () => {
     });
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/users/id/${id}`)
+        axios.get(`http://localhost:4000/api/users/id/${id}`)
             .then(response => {
                 // Format the fn value to YYYY-MM-DD (strip the time part)
                 const formattedDate = new Date(response.data.fn).toISOString().split('T')[0];
@@ -31,15 +31,15 @@ const UsuarioEdit = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:3001/api/users/id/${id}`, user)
+        axios.put(`http://localhost:4000/api/users/id/${id}`, user)
             .then(() => {alert("Usuario actualizado")
-                window.location.href = "/owner";
+                window.location.href = "/user-manage";
             })
             .catch(error => console.error(error));
     };
 
     const id_usuario = sessionStorage.getItem("id");
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {
@@ -83,7 +83,7 @@ const UsuarioEdit = () => {
                 </select><br/><br/>
                 <button type="submit">Actualizar Usuario</button>
             </form><br />
-            <a href="/owner"><button>Cancelar</button></a>
+            <a href="/user-manage"><button>Cancelar</button></a>
         </div>
     );
 };

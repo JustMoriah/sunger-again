@@ -10,7 +10,7 @@ const ChargerEdit = () => {
     });
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/chargers/id/${id}`)
+        axios.get(`http://localhost:4000/api/chargers/id/${id}`)
             .then(response => {
                 setCharger({ ...response.data });
             })
@@ -23,15 +23,15 @@ const ChargerEdit = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:3001/api/chargers/id/${id}`, charger)
+        axios.put(`http://localhost:4000/api/chargers/id/${id}`, charger)
             .then(() => {alert("Rol actualizado")
-                window.location.href = "/owner";
+                window.location.href = "/charger-manage";
             })
             .catch(error => console.error(error));
     };
 
     const id_usuario = sessionStorage.getItem("id");
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {
@@ -60,7 +60,7 @@ const ChargerEdit = () => {
                 </select><br/><br/>
             <button type="submit">Actualizar Cargador</button>
             </form><br />
-            <a href="/owner"><button>Cancelar</button></a>
+            <a href="/charger-manage"><button>Cancelar</button></a>
         </div>
     );
 };

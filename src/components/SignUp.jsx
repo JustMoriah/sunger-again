@@ -20,7 +20,7 @@ const SignUp = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
     
-        axios.get(`http://localhost:3001/api/users/correo/${user.correo}`)
+        axios.get(`http://localhost:4000/api/users/correo/${user.correo}`)
             .then((response) => {
                 if (response.data) {
                     alert("El correo ingresado ya esta en uso, por favor elige uno diferente o inicia sesion.");
@@ -28,7 +28,7 @@ const SignUp = () => {
             })
             .catch((error) => {
                 if (error.response && error.response.status === 404) {
-                    axios.post("http://localhost:3001/api/users/", user)
+                    axios.post("http://localhost:4000/api/users/", user)
                         .then(() => {
                             alert("Usuario registrado");
                             window.location.href = "/login";

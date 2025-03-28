@@ -14,10 +14,10 @@ const MaintenanceForm = () => {
     });
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/users/")
+        axios.get("http://localhost:4000/api/users/")
             .then(response => setUsers(response.data))
             .catch(error => console.error(error));
-        axios.get("http://localhost:3001/api/chargers/")
+        axios.get("http://localhost:4000/api/chargers/")
             .then(response => setChargers(response.data))
             .catch(error => console.error(error));
       }, []);
@@ -28,19 +28,19 @@ const MaintenanceForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("http://localhost:3001/api/maintenance/", maintenance)
+        axios.post("http://localhost:4000/api/maintenance/", maintenance)
             .then(() => {alert("Mantenimiento registrado")
-                window.location.href = "/owner";
+                window.location.href = "/maintenance";
             })
             .catch(error => console.error(error));
     };
 
     const id_usuario = sessionStorage.getItem("id");
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
     .then((response) => {
         const storedUser = response.data;
         if (storedUser) {
-          if (storedUser.id_rol != 1) {
+          if (storedUser.id_rol != 1 && storedUser.id_rol != 2) {
             window.location.href = "/home";
           }
         }
@@ -89,7 +89,7 @@ const MaintenanceForm = () => {
                 <textarea name="descripcion" placeholder="Descripcion" onChange={handleChange} rows="5" cols="50"/><br/><br/>
                 <button type="submit">Agregar Mantenimiento</button>
             </form><br/><br/>
-            <a href="/owner"><button>Cancelar</button></a>
+            <a href="/maintenance"><button>Cancelar</button></a>
         </div>
     );
 };

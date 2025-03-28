@@ -21,7 +21,7 @@ const UserGender = () => {
 
   useEffect(() => {
     // Fetch users data from the API
-    axios.get('http://localhost:3001/api/users/')
+    axios.get('http://localhost:4000/api/users/')
       .then(response => {
         const users = response.data;
 

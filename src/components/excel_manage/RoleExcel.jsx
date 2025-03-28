@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx"; // Import the xlsx library
 
-const UploadExcel = () => {
+const RoleExcel = () => {
   const [archivo, setArchivo] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState(""); // For error notifications
@@ -35,6 +35,7 @@ const UploadExcel = () => {
     }
   };
 
+  // Handle the upload
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!archivo) {
@@ -42,30 +43,41 @@ const UploadExcel = () => {
       setError("Selecciona un archivo Excel");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("file", archivo); // Ensure the field name matches "file" on the backend
-  
+
     try {
-      const response = await axios.post("http://localhost:4000/api/subir-excel", formData, {
+      const response = await axios.post("http://localhost:4000/api/excel-rol", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
-      // Check if the response data contains the necessary properties
-      if (response.data && response.data.registrosInsertados !== undefined && response.data.registrosDuplicados !== undefined) {
-        const { registrosInsertados, registrosDuplicados } = response.data;
-  
-        setError(""); // Clear error message, if any
-        setMensaje(`Registros insertados: ${registrosInsertados}, Duplicados: ${registrosDuplicados}`);
-      } else {
-        setError("Error en la respuesta del servidor");
+
+      const updatedData = response.data.data; // Ensure 'data' is sent in the response
+      setExcelData(updatedData); // Update the table with the merged data
+
+      setError(""); // Clear error message, if any
+
+      // Display message based on response from backend
+      const { registrosInsertados, registrosDuplicados } = response.data;
+      setMensaje("");
+      if (registrosInsertados > 0) {
+        setMensaje(`Registros insertados: ${registrosInsertados}`);
       }
+      if (registrosDuplicados > 0) {
+        setMensaje((prev) => prev + `, Duplicados: ${registrosDuplicados}`);
+      }
+      if (response.data && response.data.data) {
+        setExcelData(response.data.data); // Only set if data is available
+      } 
+      else {
+        setError("No data received from the server");
+      }
+      
     } catch (error) {
-      console.error("Upload error:", error);
       setError("Error al subir el archivo");
       setMensaje(""); // Clear success message
     }
-  };  
+  };
 
   // Function to assign row colors based on the status
   const getRowColor = (status) => {
@@ -84,44 +96,30 @@ const UploadExcel = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {/* Show the Excel content before uploading */}
-      {excelData.length > 0 && (
-        <div className='table-container'>
-          <h4>Contenido del archivo {fileName}:</h4>
-          <table border="1">
-            <thead>
-              <tr>
-                <th>ID Rol</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Fecha Nacimiento</th>
-                <th>Género</th>
-                <th>Correo</th>
-                <th>Contraseña</th>
-                <th>Activo</th>
-                <th>Estatus</th>
+      {excelData.length > 0 ? (
+      <div className='table-container'>
+        <h4>Contenido del archivo {fileName}:</h4>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Nombre de Rol</th>
+              <th>Permisos</th>
+            </tr>
+          </thead>
+          <tbody>
+            {excelData.map((row, index) => (
+              <tr key={index} style={{ color: getRowColor(row.status) }}>
+                <td>{row.nombre_rol}</td>
+                <td>{row.permisos}</td>
               </tr>
-            </thead>
-            <tbody>
-              {excelData.map((row, index) => (
-                <tr
-                  key={index}
-                  style={{ color: getRowColor(row.status) }}
-                >
-                  <td>{row.id_rol}</td>
-                  <td>{row.nombre}</td>
-                  <td>{row.apellido}</td>
-                  <td>{row.fn}</td>
-                  <td>{row.genero}</td>
-                  <td>{row.correo}</td>
-                  <td>{row.contrasena}</td>
-                  <td>{row.activo}</td>
-                  <td>{row.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p>No data available yet. Please upload a file.</p>
+    )}
+
 
       {/* Form for uploading the Excel */}
       <form onSubmit={handleUpload}>
@@ -137,4 +135,4 @@ const UploadExcel = () => {
   );
 };
 
-export default UploadExcel;
+export default RoleExcel;

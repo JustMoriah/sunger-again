@@ -6,7 +6,7 @@ import productoImage from '../assets/panel.jpeg';
 
 export default function UserPage() {
   const id_usuario = sessionStorage.getItem("id");
-  axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+  axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
     .then((response) => {
       const storedUser = response.data;
     })
@@ -67,12 +67,12 @@ export default function UserPage() {
       {/* Sections with background */}
       <div id="sobre-nosotros" className="section-bg">
         <h4>Sobre nosotros</h4>
-        <p>La organización "Sunger" fue fundada en el año 2025 con el propósito de desarrollar soluciones tecnológicas sustentables...</p>
+        <p>La organización "Sunger" fue fundada en el año 2025 con el propósito de desarrollar soluciones tecnológicas sustentables.</p>
       </div>
 
       <div id="producto" className="section-bg">
         <h4>Producto</h4>
-        <p>Los requerimientos técnicos incluyen un Jack USB, paneles solares de 6V, diodos rectificadores y más...</p>
+        <p>Los requerimientos técnicos incluyen un Jack USB, paneles solares de 6V, diodos rectificadores, bateria de 6v a 4A y sensores de corriente. </p>
         <img src={productoImage} alt="Producto" />
       </div>
 

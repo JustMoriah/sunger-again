@@ -10,7 +10,7 @@ const RoleEdit = () => {
     });
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/roles/id/${id}`)
+        axios.get(`http://localhost:4000/api/roles/id/${id}`)
             .then(response => {
                 setRole({ ...response.data });
             })
@@ -23,15 +23,15 @@ const RoleEdit = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:3001/api/roles/id/${id}`, role)
+        axios.put(`http://localhost:4000/api/roles/id/${id}`, role)
             .then(() => {alert("Rol actualizado")
-                window.location.href = "/owner";
+                window.location.href = "/role-manage";
             })
             .catch(error => console.error(error));
     };
 
     const id_usuario = sessionStorage.getItem("id");
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {
@@ -55,7 +55,7 @@ const RoleEdit = () => {
             <input type="text" name="permisos" placeholder="Permisos" value={role.permisos} onChange={handleChange}/><br/><br/>
             <button type="submit">Actualizar Rol</button>
             </form><br />
-            <a href="/owner"><button>Cancelar</button></a>
+            <a href="/role-manage"><button>Cancelar</button></a>
         </div>
     );
 };

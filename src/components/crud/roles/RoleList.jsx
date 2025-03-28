@@ -13,21 +13,21 @@ export default function RoleList() {
   const [newPerPage, setNewPerPage] = useState(perPage);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/roles/")
+    axios.get("http://localhost:4000/api/roles/")
         .then(response => setRoles(response.data))
         .catch(error => console.error(error));
   }, []);
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:3001/api/roles/id/${id}`)
+        axios.delete(`http://localhost:4000/api/roles/id/${id}`)
             .then(() => {setRoles(roles.filter(role => role.id_rol !== id))
               alert("¡Rol ha sido destruido en el sol!");
-              window.location.href = "/owner";
+              window.location.href = "/role-manage";
             })
             .catch(error => console.error(error));
     };
 
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {
@@ -62,33 +62,35 @@ export default function RoleList() {
         <input type="number" value={newPerPage} onChange={handlePerPageChange} />
         <button type="button" onClick={handleApplyPerPage}>Aplicar</button> {/* Apply button */}
       </form>
-      <table>
-        <tbody>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Permisos</th>
-            {userRole === 1 ? (
-                <th><a href='/role/create'><button>Registrar rol</button></a></th>
-            ) : (
-            <p></p>
-            )}
-          </tr>
-          {currentPageRoles.map(role => (
-            <tr key={role.id_rol}>
-              <td>{role.id_rol}</td>
-              <td>{role.nombre_rol}</td>
-              <td>{role.permisos}</td>
+      <div className='table-container'>
+        <table>
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Permisos</th>
               {userRole === 1 ? (
-                <td className="action-buttons"><Link to={`/role/edit/${role.id_rol}`}><button>Editar</button></Link>
-                <button onClick={() => handleDelete(role.id_rol)}>Eliminar</button></td>
-                ) : (
-                    <p></p>
-                )}
+                  <th><a href='/role/create'><button>Registrar rol</button></a></th>
+              ) : (
+              <p></p>
+              )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+            {currentPageRoles.map(role => (
+              <tr key={role.id_rol}>
+                <td>{role.id_rol}</td>
+                <td>{role.nombre_rol}</td>
+                <td>{role.permisos}</td>
+                {userRole === 1 ? (
+                  <td className="action-buttons"><Link to={`/role/edit/${role.id_rol}`}><button>Editar</button></Link>
+                  <button onClick={() => handleDelete(role.id_rol)}>Eliminar</button></td>
+                  ) : (
+                      <p></p>
+                  )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <ReactPaginate
         previousLabel={"<"}
         nextLabel={">"}

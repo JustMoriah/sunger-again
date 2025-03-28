@@ -8,7 +8,7 @@ import ChargerState from '../charts/ChargerState';
 
 export default function ChargerManage() {
   const id_usuario = sessionStorage.getItem("id");
-  axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+  axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
     .then((response) => {
       const storedUser = response.data;
     })

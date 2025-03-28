@@ -13,7 +13,7 @@ const ChargerState = () => {
 
   useEffect(() => {
     // Fetch chargers data from the API
-    axios.get('http://localhost:3001/api/chargers/')
+    axios.get('http://localhost:4000/api/chargers/')
       .then(response => {
         console.log('API response:', response.data); // Log the API response to check if we have data
         setChargers(response.data); // Store the data

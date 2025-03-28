@@ -8,9 +8,10 @@ import { DropdownSubmenu } from 'react-bootstrap-submenu';
 const NavBar = () => {
     const id_usuario = sessionStorage.getItem("id");
     const [userRole, setUserRole] = useState(null);
+    const [isNavActive, setIsNavActive] = useState(false); // To toggle the mobile menu
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+        axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
             .then((response) => {
                 const storedUser = response.data;
                 if (storedUser) {
@@ -38,7 +39,7 @@ const NavBar = () => {
 
         console.log('Sending logout data:', loginData);
 
-        axios.post("http://localhost:3001/api/logins/", loginData)
+        axios.post("http://localhost:4000/api/logins/", loginData)
             .then(() => {
                 console.log("Logout registrado correctamente");
                 sessionStorage.clear(); // Clear session after successful logout
@@ -49,32 +50,42 @@ const NavBar = () => {
             });
     };
 
+    const toggleNav = () => {
+        setIsNavActive(prevState => !prevState);
+    };
+
     return (
-        <div className="navbar">
+        <div className={`navbar ${isNavActive ? 'active' : ''}`}>
             <a href="/home" className="barLogo">
                 <img src={isologo} width="100" height="40" alt="Logo" />
             </a>
+            <div className="hamburger" onClick={toggleNav}>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
             <div className="navLinks">
+                {/* Render links based on user role */}
                 {userRole === 1 ? (
                     <>
                         <a href="/home">Inicio</a>
-                        <a href="/admin">Admin</a>
-                        <NavDropdown title="Manejo de..." id="basic-nav-dropdown">
-                            <DropdownSubmenu className="dropdown-submenu" title="Cargadores">
-                                <NavDropdown.Item href="/charger-manage">Cargadores</NavDropdown.Item>
-                                <NavDropdown.Item href="/maintenance">Mantenimiento</NavDropdown.Item>
-                            </DropdownSubmenu>
-                            <DropdownSubmenu className="dropdown-submenu" title="Usuarios">
-                                <NavDropdown.Item href="/user-manage">Usuarios</NavDropdown.Item>
-                                <NavDropdown.Item href="/role-manage">Roles</NavDropdown.Item>
-                                <NavDropdown.Item href="/login-history">Logins</NavDropdown.Item>
-                            </DropdownSubmenu>
-                        </NavDropdown>
+                            <NavDropdown title="Manejo de..." id="basic-nav-dropdown">
+                                <DropdownSubmenu className="dropdown-submenu" title="Cargadores">
+                                    <NavDropdown.Item href="/charger-manage">Cargadores</NavDropdown.Item>
+                                    <NavDropdown.Item href="/maintenance">Mantenimiento</NavDropdown.Item>
+                                </DropdownSubmenu>
+                                <DropdownSubmenu className="dropdown-submenu" title="Usuarios">
+                                    <NavDropdown.Item href="/user-manage">Usuarios</NavDropdown.Item>
+                                    <NavDropdown.Item href="/role-manage">Roles</NavDropdown.Item>
+                                    <NavDropdown.Item href="/login-history">Logins</NavDropdown.Item>
+                                </DropdownSubmenu>
+                            </NavDropdown>
+                        {/* More Links */}
                     </>
                 ) : userRole === 2 ? (
                     <>
                         <a href="/home">Inicio</a>
-                        <a href="/admin">Admin</a>
+                        <a href="/maintenance">Mantenimiento</a>
                     </>
                 ) : userRole === 3 ? (
                     <>
@@ -83,8 +94,8 @@ const NavBar = () => {
                 ) : (
                     <p>Loading...</p>
                 )}
+                <button onClick={signout} className="outButton">Cerrar Sesion</button>
             </div>
-            <button onClick={signout} className="outButton">Cerrar Sesion</button>
         </div>
     );
 };

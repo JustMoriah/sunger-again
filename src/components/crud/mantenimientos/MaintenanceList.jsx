@@ -13,7 +13,7 @@ export default function MaintenanceList() {
   const [newPerPage, setNewPerPage] = useState(perPage);
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/maintenance/")
+        axios.get("http://localhost:4000/api/maintenance/")
         .then(response => {
             const formattedMaintenance = response.data.map(maintenance => {
             const formattedDate = new Date(maintenance.fecha).toISOString().split('T')[0];
@@ -25,15 +25,15 @@ export default function MaintenanceList() {
     }, []);
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:3001/api/maintenance/id/${id}`)
+        axios.delete(`http://localhost:4000/api/maintenance/id/${id}`)
             .then(() => {setMaintenance(maintenance.filter(maintenance => maintenance.id_rol !== id))
               alert("¡Mantenimiento ha sido destruido en el sol!");
-              window.location.href = "/owner";
+              window.location.href = "/maintenance";
             })
             .catch(error => console.error(error));
     };
 
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {
@@ -68,39 +68,46 @@ export default function MaintenanceList() {
         <input type="number" value={newPerPage} onChange={handlePerPageChange} />
         <button type="button" onClick={handleApplyPerPage}>Aplicar</button> {/* Apply button */}
       </form>
-      <table>
-        <tbody>
-          <tr>
-            <th>ID</th>
-            <th>ID Cargador</th>
-            <th>ID Usaurio</th>
-            <th>Fecha</th>
-            <th>Tipo</th>
-            <th>Descripcion</th>
-            {userRole === 1 ? (
-                <th><a href='/maintenance/create'><button>Registrar mantenimiento</button></a></th>
+      <div className='table-container'>
+        {userRole === 2 ? (
+                <a href='/maintenance/create'><button>Registrar mantenimiento</button></a>
             ) : (
-            <p></p>
-            )}
-          </tr>
-          {currentPageMain.map(maintenance => (
-            <tr key={maintenance.id_historial}>
-              <td>{maintenance.id_historial}</td>
-              <td>{maintenance.id_cargador}</td>
-              <td>{maintenance.id_usuario}</td>
-              <td>{maintenance.fecha}</td>
-              <td>{maintenance.tipo}</td>
-              <td>{maintenance.descripcion}</td>
+          <p></p>
+        )}
+        <table>
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <th>ID Cargador</th>
+              <th>ID Usaurio</th>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Descripcion</th>
               {userRole === 1 ? (
-                <td className="action-buttons"><Link to={`/maintenance/edit/${maintenance.id_historial}`}><button>Editar</button></Link>
-                <button onClick={() => handleDelete(maintenance.id_historial)}>Eliminar</button></td>
-                ) : (
-                    <p></p>
-                )}
+                  <th><a href='/maintenance/create'><button>Registrar mantenimiento</button></a></th>
+              ) : (
+              <p></p>
+              )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+            {currentPageMain.map(maintenance => (
+              <tr key={maintenance.id_historial}>
+                <td>{maintenance.id_historial}</td>
+                <td>{maintenance.id_cargador}</td>
+                <td>{maintenance.id_usuario}</td>
+                <td>{maintenance.fecha}</td>
+                <td>{maintenance.tipo}</td>
+                <td>{maintenance.descripcion}</td>
+                {userRole === 1 ? (
+                  <td className="action-buttons"><Link to={`/maintenance/edit/${maintenance.id_historial}`}><button>Editar</button></Link>
+                  <button onClick={() => handleDelete(maintenance.id_historial)}>Eliminar</button></td>
+                  ) : (
+                      <p></p>
+                  )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <ReactPaginate
         previousLabel={"<"}
         nextLabel={">"}

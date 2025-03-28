@@ -10,7 +10,7 @@ const LoginEdit = () => {
     });
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/logins/id/${id}`)
+        axios.get(`http://localhost:4000/api/logins/id/${id}`)
             .then(response => {
                 setLogin({ ...response.data });
             })
@@ -23,7 +23,7 @@ const LoginEdit = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:3001/api/logins/id/${id}`, login)
+        axios.put(`http://localhost:4000/api/logins/id/${id}`, login)
             .then(() => {alert("Login actualizado")
                 window.location.href = "/owner";
             })
@@ -31,7 +31,7 @@ const LoginEdit = () => {
     };
 
     const id_usuario = sessionStorage.getItem("id");
-    axios.get(`http://localhost:3001/api/users/id/${id_usuario}`)
+    axios.get(`http://localhost:4000/api/users/id/${id_usuario}`)
         .then((response) => {
             const storedUser = response.data;
             if (storedUser) {

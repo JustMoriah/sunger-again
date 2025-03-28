@@ -12,7 +12,7 @@ const MaintenanceType = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/maintenance/")
+    axios.get("http://localhost:4000/api/maintenance/")
       .then(response => {
         const formattedMaintenance = response.data.map(maintenance => {
           const formattedDate = new Date(maintenance.fecha).toISOString().split('T')[0];

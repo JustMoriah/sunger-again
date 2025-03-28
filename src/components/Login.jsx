@@ -17,7 +17,7 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.get(`http://localhost:3001/api/users/correo/${user.correo}`)
+        axios.get(`http://localhost:4000/api/users/correo/${user.correo}`)
             .then((response) => {
                 const storedUser = response.data;
                 if (storedUser) {
@@ -45,16 +45,16 @@ const Login = () => {
                         console.log('Sending login data:', loginData);
     
                         // Send the POST request
-                        axios.post("http://localhost:3001/api/logins/", loginData)
+                        axios.post("http://localhost:4000/api/logins/", loginData)
                             .then(() => console.log("Login registrado correctamente"))
                             .catch(error => {
                                 console.error("Error al registrar login:", error);
                             });
     
                         if (storedUser.id_rol === 1) {
-                            navigate("/owner");
+                            navigate("/home");
                         } else if (storedUser.id_rol === 2) {
-                            navigate("/admin");
+                            navigate("/maintenance");
                         } else if (storedUser.id_rol === 3) {
                             navigate("/home");
                         }
