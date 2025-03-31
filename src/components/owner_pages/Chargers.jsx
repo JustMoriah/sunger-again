@@ -6,6 +6,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import ChargerState from '../charts/ChargerState';
 import ChargerExcel from '../excel_manage/ChargerExcel';
+import CurrentLevels from '../charts/CurrentLevels';
+import VoltageLevels from '../charts/VoltageLevels';
 
 export default function ChargerManage() {
   const id_usuario = sessionStorage.getItem("id");
@@ -28,13 +30,18 @@ export default function ChargerManage() {
         <Tabs>
             <TabList>
                 <Tab>Tabla</Tab>
-                <Tab>Graficas</Tab>
+                <Tab>Disponibilidad</Tab>
+                <Tab>Niveles de energia</Tab>
             </TabList>
             <TabPanel>
                 <ChargerList/>
             </TabPanel>
             <TabPanel>
                 <ChargerState/>
+            </TabPanel>
+            <TabPanel>
+                <CurrentLevels/>
+                <VoltageLevels/>
             </TabPanel>
         </Tabs>
         <ChargerExcel/>

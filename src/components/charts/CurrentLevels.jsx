@@ -30,7 +30,7 @@ const CurrentLevels = () => {
     fetchData();
 
     // Refresh data every 10 seconds to simulate real-time updates
-    const interval = setInterval(fetchData, 10000); // 10000ms = 10 seconds
+    const interval = setInterval(fetchData, 4000); // 10000ms = 10 seconds
     return () => clearInterval(interval);  // Clear interval when component unmounts
   }, []);
 
