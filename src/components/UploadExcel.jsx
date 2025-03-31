@@ -51,12 +51,13 @@ const UploadExcel = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
   
-      // Check if the response data contains the necessary properties
-      if (response.data && response.data.registrosInsertados !== undefined && response.data.registrosDuplicados !== undefined) {
-        const { registrosInsertados, registrosDuplicados } = response.data;
-  
+      // Ensure the response contains the correct data (including the status field)
+      if (response.data && response.data.data && Array.isArray(response.data.data)) {
+        setExcelData(response.data.data); // Update excelData with the rows containing status field
+        const { registrosInsertados, registrosDuplicados, registrosFaltantes } = response.data;
+        
         setError(""); // Clear error message, if any
-        setMensaje(`Registros insertados: ${registrosInsertados}, Duplicados: ${registrosDuplicados}`);
+        setMensaje(`Registros insertados: ${registrosInsertados}, Duplicados: ${registrosDuplicados}, Registros con datos faltantes: ${registrosFaltantes}`);
       } else {
         setError("Error en la respuesta del servidor");
       }
@@ -67,20 +68,20 @@ const UploadExcel = () => {
     }
   };  
 
-  // Function to assign row colors based on the status
   const getRowColor = (status) => {
-    if (status === "Subido") return "Green"; // Light green
-    if (status === "Duplicado") return "Orange"; // Yellow
-    if (status === "Datos faltantes") return "Red"; // Light red
-    return ""; // Default no color
+    if (status === "Subido") return "Green";
+    if (status === "Duplicado") return "Orange";
+    if (status === "Datos faltantes") return "Red";
+    return "";
   };
+  
 
   return (
     <div>
       <h3>Subir archivo Excel</h3>
 
       {/* Show success or error messages */}
-      {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
+      {mensaje && <p>{mensaje}</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {/* Show the Excel content before uploading */}

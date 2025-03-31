@@ -5,6 +5,7 @@ import ChargerList from '../crud/cargador/ChargerList';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import ChargerState from '../charts/ChargerState';
+import ChargerExcel from '../excel_manage/ChargerExcel';
 
 export default function ChargerManage() {
   const id_usuario = sessionStorage.getItem("id");
@@ -36,6 +37,7 @@ export default function ChargerManage() {
                 <ChargerState/>
             </TabPanel>
         </Tabs>
+        <ChargerExcel/>
     </div>
   );
 }

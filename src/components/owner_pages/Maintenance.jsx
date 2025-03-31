@@ -5,6 +5,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import NavBar from '../NavBar';
 import MaintenanceType from '../charts/MaintenanceType';
+import MaintenanceExcel from '../excel_manage/MaintenanceExcel';
 
 export default function MaintenanceManage() {
   const id_usuario = sessionStorage.getItem("id");
@@ -36,6 +37,7 @@ export default function MaintenanceManage() {
                 <MaintenanceType/>
             </TabPanel>
         </Tabs>
+        <MaintenanceExcel/>
     </div>
   );
 }

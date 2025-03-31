@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx"; // Import the xlsx library
 
-const RoleExcel = () => {
+const ChargerExcel = () => {
   const [archivo, setArchivo] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState(""); // For error notifications
@@ -47,17 +47,19 @@ const RoleExcel = () => {
     formData.append("file", archivo); // Ensure the field name matches "file" on the backend
   
     try {
-      const response = await axios.post("http://localhost:4000/api/role-excel", formData, {
+      const response = await axios.post("http://localhost:4000/api/charger-excel", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      console.log("API Response:", response.data);
   
       // Ensure the response contains the correct data (including the status field)
       if (response.data && response.data.data && Array.isArray(response.data.data)) {
-        setExcelData(response.data.data); // Update excelData with the rows containing status field
-        const { registrosInsertados, registrosDuplicados, registrosFaltantes } = response.data;
+        setExcelData(response.data.data); // Set the parsed data
+        const { registrosInsertados, registrosFaltantes } = response.data;
         
         setError(""); // Clear error message, if any
-        setMensaje(`Registros insertados: ${registrosInsertados}, Duplicados: ${registrosDuplicados}, Registros con datos faltantes: ${registrosFaltantes}`);
+        setMensaje(`Registros insertados: ${registrosInsertados}, Registros con datos faltantes: ${registrosFaltantes}`);
       } else {
         setError("Error en la respuesta del servidor");
       }
@@ -70,7 +72,6 @@ const RoleExcel = () => {
 
   const getRowColor = (status) => {
     if (status === "Subido") return "Green";
-    if (status === "Duplicado") return "Orange";
     if (status === "Datos faltantes") return "Red";
     return "";
   };
@@ -84,15 +85,14 @@ const RoleExcel = () => {
       {mensaje && <p>{mensaje}</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* Show the Excel content before uploading */}
       {excelData.length > 0 && (
         <div className='table-container'>
           <h4>Contenido del archivo {fileName}:</h4>
           <table border="1">
             <thead>
               <tr>
-                <th>Nombre</th>
-                <th>Permisos</th>
+                <th>Ubicacion</th>
+                <th>Estado</th>
                 <th>Estatus</th>
               </tr>
             </thead>
@@ -102,8 +102,8 @@ const RoleExcel = () => {
                   key={index}
                   style={{ color: getRowColor(row.status) }}
                 >
-                  <td>{row.nombre_rol}</td>
-                  <td>{row.permisos}</td>
+                  <td>{row.ubicacion}</td>
+                  <td>{row.estado}</td>
                   <td>{row.status}</td>
                 </tr>
               ))}
@@ -126,4 +126,4 @@ const RoleExcel = () => {
   );
 };
 
-export default RoleExcel;
+export default ChargerExcel;
