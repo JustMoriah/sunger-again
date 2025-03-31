@@ -27,7 +27,7 @@ export default function MaintenanceList() {
     const handleDelete = (id) => {
         axios.delete(`http://localhost:4000/api/maintenance/id/${id}`)
             .then(() => {setMaintenance(maintenance.filter(maintenance => maintenance.id_rol !== id))
-              alert("¡Mantenimiento ha sido destruido en el sol!");
+              alert("Historial de mantenimiento ha sido eliminado.");
               window.location.href = "/maintenance";
             })
             .catch(error => console.error(error));

@@ -21,7 +21,7 @@ export default function RoleList() {
     const handleDelete = (id) => {
         axios.delete(`http://localhost:4000/api/roles/id/${id}`)
             .then(() => {setRoles(roles.filter(role => role.id_rol !== id))
-              alert("¡Rol ha sido destruido en el sol!");
+              alert("Rol ha sido eliminado.");
               window.location.href = "/role-manage";
             })
             .catch(error => console.error(error));

@@ -75,7 +75,7 @@ export default function UsuarioList() {
     axios.delete(`http://localhost:4000/api/users/id/${id}`)
       .then(() => {
         setUsers(users.filter(user => user.id_usuario !== id));
-        alert('¡Registro del usuario ha sido destruido en el sol!');
+        alert('Usuario ha sido eliminado.');
         window.location.href = '/user-manage';
       })
       .catch(error => console.error(error));

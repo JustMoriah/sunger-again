@@ -16,10 +16,15 @@ const CurrentLevels = () => {
         const response = await axios.get('http://localhost:4000/api/get/energia');
         const results = response.data;
 
-        // Extract the data for the graph
-        const labels = results.map(item => item.hora);  // Get time for the x-axis
-        const corriente = results.map(item => parseFloat(item.corriente));  // Get corriente for y-axis
-        
+        const labels = results.map(item => item.hora);
+        const corriente = results.map(item => parseFloat(item.corriente));
+
+        corriente.forEach((value) => {
+          if (value >= 200) {
+            alert(`¡Corriente de ${value} mA excede el valor esperado!`);
+          }
+        });
+
         setTimeLabels(labels);
         setCorrienteData(corriente);
       } catch (error) {
@@ -29,9 +34,8 @@ const CurrentLevels = () => {
 
     fetchData();
 
-    // Refresh data every 10 seconds to simulate real-time updates
-    const interval = setInterval(fetchData, 4000); // 10000ms = 10 seconds
-    return () => clearInterval(interval);  // Clear interval when component unmounts
+    const interval = setInterval(fetchData, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   const chartData = {

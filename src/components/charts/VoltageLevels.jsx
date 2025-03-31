@@ -16,9 +16,14 @@ const VoltageLevels = () => {
         const response = await axios.get('http://localhost:4000/api/get/energia');
         const results = response.data;
 
-        // Extract the data for the graph
-        const labels = results.map(item => item.hora);  // Get time for the x-axis
-        const voltaje = results.map(item => parseFloat(item.voltaje));  // Get voltaje for y-axis
+        const labels = results.map(item => item.hora);
+        const voltaje = results.map(item => parseFloat(item.voltaje));
+
+        voltaje.forEach((value) => {
+            if (value >= 17) {
+              alert(`¡Voltaje de ${value} V excede el valor esperado!`);
+            }
+        });
         
         setTimeLabels(labels);
         setVoltajeData(voltaje);
@@ -29,16 +34,15 @@ const VoltageLevels = () => {
 
     fetchData();
 
-    // Refresh data every 10 seconds to simulate real-time updates
-    const interval = setInterval(fetchData, 4000); // 10000ms = 10 seconds
-    return () => clearInterval(interval);  // Clear interval when component unmounts
+    const interval = setInterval(fetchData, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   const chartData = {
     labels: timeLabels,
     datasets: [
       {
-        label: 'Voltaje (mA)',
+        label: 'Voltaje (V)',
         data: voltajeData,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
